@@ -1,0 +1,69 @@
+#!/bin/bash
+
+OP=$1
+SOURCE=$2
+TARGET=$3
+
+PARAMS=""
+
+ARGUMENT_LIST=(
+  "sheet-id"
+  "host"
+  "port"
+  "arrow"
+  "opacity"
+)
+
+opts=$(getopt --longoptions "$(printf "%s:," "${ARGUMENT_LIST[@]}")" --name $(basename "$0") --options "" -- "$@")
+
+eval set --$opts
+
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --sheet-id)
+      SHEET_ID=$2;
+      shift 2;
+      ;;
+    --host)
+      HOST=$2;
+      shift 2;
+      ;;
+    --port)
+      PORT=$2
+      shift 2
+      ;;
+    --arrow)
+      ARROW=$2
+      shift 2
+      ;;
+    --opacity)
+      OPACITY=$2
+      shift 2
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+eval set -- "$PARAMS"
+
+if [[ -z $PORT ]]; then
+  PORT="8000"
+fi
+
+if [[ -z OPACITY ]]; then
+  OPACITY="1.0"
+fi
+
+if [[ -z COLOR ]]; then
+  COLOR=0x000000
+fi
+
+if [[ "$OP" == "add" ]]; then
+  curl -d "sheetId=$SHEET_ID&a=$SOURCE&b=$TARGET&arrow=$ARROW&opacity=$OPACITY&color=$COLOR" -X POST "http://$HOST:$PORT/add_edge"
+fi
+
+if [[ "$OP" == "rm" ]]; then
+  curl -d "sheetId=$SHEET_ID&id=$SOURCE" -X POST "http://$HOSTt:$PORT/remove_edge"
+fi

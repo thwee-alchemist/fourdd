@@ -1,0 +1,131 @@
+#!/bin/bash
+
+if [[ "$1" == "add" ]]; then
+  OP="add";
+fi
+
+if [[ "$1" == "rm" ]]; then
+  OP="rm";
+  ID="$2";
+fi
+
+PARAMS=""
+
+# Command Line Option Parsing
+# Thanks: https://bl.ocks.org/magnetikonline/22c1eb412daa350eeceee76c97519da8
+ARGUMENT_LIST=(
+  "host"
+  "sheet-id"
+  "cube-color"
+  "cube-texture"
+  "cube-size"
+  "label-size"
+  "label-text"
+  "label-color"
+  "label-offset"
+  "port"
+  "host"
+)
+
+opts=$(getopt --longoptions "$(printf "%s:," "${ARGUMENT_LIST[@]}")" --name $(basename "$0") --options "" -- "$@")
+
+eval set --$opts
+
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --sheet-id)
+      SHEET_ID=$2;
+      shift 2;
+      ;;
+    --cube-color)
+      CUBE_COLOR=$2;
+      shift 2;
+      ;;
+    --cube-texture)
+      CUBE_TEXTURE=$2
+      shift 2
+      ;;
+    --cube-size)
+      CUBE_SIZE=$2
+      shift 2
+      ;;
+    --label-size)
+      LABEL_SIZE=$2
+      shift 2
+      ;;
+    --label-text)
+      LABEL_TEXT=$2
+      shift 2
+      ;;
+    --label-color)
+      LABEL_COLOR=$2
+      shift 2
+      ;;
+    --label-offset)
+      LABEL_OFFSET=$2
+      shift 2
+      ;;
+    --port)
+      PORT=$2
+      shift 2
+      ;;
+    --host)
+      HOST=$2
+      shift 2
+      ;;
+   *)
+      break
+      ;;
+  esac
+done
+
+# Port Option
+if [[ -z $PORT ]]; then
+  PORT="8000";
+fi
+
+# Host Option
+if [[ -z $HOST ]]; then
+  HOST="http://localhost";
+fi
+
+# Cube Options
+if [[ -z $CUBE_COLOR ]]; then
+  CUBE_COLOR="darkblue";
+fi
+
+if [[ -z $CUBE_TEXTURE ]]; then
+  CUBE_TEXTURE="";
+fi
+
+if [[ -z $CUBE_SIZE ]]; then
+  CUBE_SIZE=10;
+fi
+
+# Label Options
+if [[ -z $LABEL_SIZE ]]; then
+  LABEL_SIZE=10;
+fi
+
+if [[ -z $LABEL_TEXT ]]; then
+  LABEL_TEXT="";
+fi
+
+if [[ -z $LABEL_COLOR ]]; then
+  LABEL_COLOR="0x000000";
+fi
+
+if [[ -z $LABEL_OFFSET ]]; then
+  LABEL_OFFSET="10";
+fi
+
+# set positional arguments in their proper place
+eval set -- "$PARAMS";
+
+if [[ "$OP" == "add" ]]; then
+  curl -d "sheetId=$SHEET_ID&cube_texture=$CUBE_TEXTURE&cube_color=$CUBE_COLOR&cube_size=$CUBE_SIZE&label_size=$LABEL_SIZE&label_text=$LABEL_TEXT&label_color=$LABEL_COLOR&label_offset=$LABEL_OFFSET" -X POST "$HOST:$PORT/graph/add_vertex"
+fi
+
+if [[ "$OP" == "rm" ]]; then
+  curl -d "sheetId=$SHEET_ID&id=$ID" -X POST "$HOST:$PORT/graph/remove_vertex";
+fi

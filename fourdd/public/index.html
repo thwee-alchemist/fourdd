@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="fourddApp">
+  <head>
+    <base href="/" />
+    <title>Social Cartography</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
+
+    <script src="socket.io.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="popper.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="angular.min.js"></script>
+    <script src="angular-sanitize.min.js"></script>
+    <script src="angular-route.min.js"></script>
+    <script src="dynamic-graph.bundle.min.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body ng-controller="fourddCtrl">
+
+    <dynamic-graph 
+      id="graph" 
+      width="800" 
+      height="600" 
+      background="white" 
+      style="border: 1px solid green;">
+    </dynamic-graph>
+
+  </body>
+</html>

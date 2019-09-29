@@ -1,0 +1,59 @@
+#!/bin/bash
+
+OP=$1
+SOURCE=$2
+TARGET=$3
+
+PARAMS=""
+
+ARGUMENT_LIST=(
+  "port"
+  "arrow"
+  "opacity"
+)
+
+opts=$(getopt --longoptions "$(printf "%s:," "${ARGUMENT_LIST[@]}")" --name $(basename "$0") --options "" -- "$@")
+
+eval set --$opts
+
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --port)
+      PORT=$2
+      shift 2
+      ;;
+    --arrow)
+      ARROW=$2
+      shift 2
+      ;;
+    --opacity)
+      OPACITY=$2
+      shift 2
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+eval set -- "$PARAMS"
+
+if [[ -z $PORT ]]; then
+  PORT="8000"
+fi
+
+if [[ -z OPACITY ]]; then
+  OPACITY="1.0"
+fi
+
+if [[ -z COLOR ]]; then
+  COLOR=0xffffff
+fi
+
+if [[ "$OP" == "add" ]]; then
+  curl -d "a=$SOURCE&b=$TARGET&arrow=$ARROW&opacity=$OPACITY&color=$COLOR" -X POST "http://localhost:$PORT/add_edge"
+fi
+
+if [[ "$OP" == "rm" ]]; then
+  curl -d "id=$SOURCE" -X POST "http://localhost:$PORT/remove_edge"
+fi

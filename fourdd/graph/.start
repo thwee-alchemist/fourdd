@@ -1,0 +1,4 @@
+#!/bin/bash
+
+node fourdd.js $1 $2
+

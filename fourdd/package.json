@@ -1,0 +1,40 @@
+{
+  "name": "fourdd",
+  "version": "4.0.0",
+  "description": "A (small) graph visualizer (v<250)",
+  "main": "fourdd.js",
+  "scripts": {
+    "start": "node fourdd.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://code.joshuamoore.dev/me/fourdd.git"
+  },
+  "keywords": [
+    "fourdd",
+    "dynamic graph visualization",
+    "3D graph visualization",
+    "network graph",
+    "Successor to FourDSocketProxy"
+  ],
+  "author": "joshua.moore@leudla.net",
+  "license": "MIT",
+  "dependencies": {
+    "angular-route": "^1.7.8",
+    "angular-sanitize": "^1.7.8",
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.3.1",
+    "compromise": "^11.14.2",
+    "ejs": "^2.7.1",
+    "express": "^4.17.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^2.2.0",
+    "yargs": "^13.2.4"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "10.3.0"
+  }
+}

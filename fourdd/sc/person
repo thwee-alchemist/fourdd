@@ -1,0 +1,64 @@
+#!/bin/bash
+
+if [[ "$1" == "add" ]]; then
+  OP="add";
+fi
+
+if [[ "$1" == "rm" ]]; then
+  OP="rm";
+  ID="$2";
+fi
+
+PARAMS=""
+
+# Command Line Option Parsing
+# Thanks: https://bl.ocks.org/magnetikonline/22c1eb412daa350eeceee76c97519da8
+ARGUMENT_LIST=(
+  "picture"
+  "name"
+  "port"
+)
+
+opts=$(getopt --longoptions "$(printf "%s:," "${ARGUMENT_LIST[@]}")" --name $(basename "$0") --options "" -- "$@")
+
+eval set --$opts
+
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --picture)
+      PICTURE=$2;
+      shift 2;
+      ;;
+    --name)
+      NAME=$2;
+      shift 2;
+      ;;
+    --port)
+      PORT=$2
+      shift 2
+      ;;
+   *)
+      break
+      ;;
+  esac
+done
+
+# Port Option
+if [[ -z $PORT ]]; then
+  PORT="8000";
+fi
+
+# set positional arguments in their proper place
+eval set -- "$PARAMS";
+
+if [[ "$OP" == "add" ]]; then
+  if [[ -z $PICTURE ]]; then
+    ./graph/vertex add --cube-color darkblue --label-text $NAME --cube-size 10 --port $PORT
+  else
+    ./graph/vertex add --cube-texture $PICTURE --label-text $NAME --cube-size 10 --port $PORT
+  fi
+fi
+
+if [[ "$OP" == "rm" ]]; then
+  ./graph/vertex rm $ID
+fi
